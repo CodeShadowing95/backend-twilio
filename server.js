@@ -61,17 +61,31 @@ app.post('/create-video-task', async (req, res) => {
     const attributes = {
       type: 'video',
       name: service,
-      serviceInfo: {
-        label: service
-      },
-      customerInfo: {
-        displayName: customerName,
-      },
-      channelType: 'custom', // Important for Flex UI customization
+      direction: 'inbound',
       videoRoom: room.uniqueName,
+      conversationType: 'video',
+      customerInfo: {
+        identity: customerIdentity,
+        displayName: customerName,
+        avatar: '',
+        status: 'waiting',
+        channel: 'video'
+      },
       conversations: {
         conversation_id: `video-${Date.now()}`,
-        conversation_type: 'video',
+        customer_id: customerIdentity,
+        conversation_attribute_1: '',
+        conversation_label_1: service,
+        conversation_label_2: ''
+      },
+      conference: {
+        room: room.uniqueName,
+        status: 'pending'
+      },
+      serviceInfo: {
+        type: 'video',
+        label: service,
+        requestTime: new Date().toISOString()
       }
     };
 
