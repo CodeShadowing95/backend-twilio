@@ -70,7 +70,8 @@ app.post('/create-video-task', async (req, res) => {
       channelType: 'custom', // Important for Flex UI customization
       videoRoom: room.uniqueName,
       conversations: {
-        conversation_id: `video-${Date.now()}`
+        conversation_id: `video-${Date.now()}`,
+        conversation_type: 'video',
       }
     };
 
