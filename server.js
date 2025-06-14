@@ -120,6 +120,35 @@ app.post('/create-video-task', async (req, res) => {
 });
 
 
+// Endpoint to get task status
+app.get('/task-status', async (req, res) => {
+  const { taskSid } = req.query;
+
+  if(!taskSid) {
+    console.error('❌ Missing taskSid:', taskSid);
+    return res.status(400).json({ error: 'Missing taskSid' });
+  }
+
+  try {
+    const task = await twilioClient.taskrouter.v1
+      .workspaces(process.env.TWILIO_WORKSPACE_SID)
+      .tasks(taskSid)
+      .fetch();
+
+    res.json({
+      status: task.attributes.status,
+      workerName: task.assignmentDetails?.workerName
+    });
+  } catch (err) {
+    console.error('❌ Error fetching task status:', err);
+    res.status(500).json({
+      error: 'Erreur lors de la récupération de l\'état de la tâche',
+      details: err.message
+    });
+  }
+});
+
+
 app.listen(PORT, async () => {
   console.log("Workspace SID:", process.env.TWILIO_WORKSPACE_SID);
 
