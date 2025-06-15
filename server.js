@@ -130,19 +130,16 @@ app.get('/task-status', async (req, res) => {
   }
 
   try {
-    const task = await twilioClient.taskrouter.v1
-      .workspaces(process.env.TWILIO_WORKSPACE_SID)
-      .tasks(taskSid)
-      .fetch();
-
-    res.json({
-      status: task.attributes.status,
-      workerName: task.assignmentDetails?.workerName
-    });
+    const response = await fetch(`https://video-backend-9021.twil.io/task-status?taskSid=${taskSid}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    res.json(data);
   } catch (err) {
     console.error('❌ Error fetching task status:', err);
     res.status(500).json({
-      error: 'Erreur lors de la récupération de l\'état de la tâche',
+      error: 'Error fetching task status',
       details: err.message
     });
   }
